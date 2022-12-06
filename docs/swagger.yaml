@@ -3,17 +3,14 @@ info:
 paths:
   /:
     get:
-      consumes:
-      - application/json
-      description: do ping
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: ok
           schema:
             type: string
-      summary: ping example
+      summary: 创建用户
       tags:
-      - 首页
+      - 用户模块
 swagger: "2.0"

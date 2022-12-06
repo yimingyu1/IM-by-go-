@@ -3,6 +3,7 @@ package model
 import (
 	"gin_chat/common"
 	"gorm.io/gorm"
+	"log"
 	"time"
 )
 
@@ -31,4 +32,19 @@ func GetUserList() []*UserBasic {
 	data := make([]*UserBasic, 10)
 	common.DB.Find(&data)
 	return data
+}
+
+func CreateUser(user *UserBasic) {
+	common.DB.Debug().Create(user)
+}
+
+func QueryUserById(id int) *UserBasic {
+	var user UserBasic
+	common.DB.Debug().First(&user, "id = ?", id)
+	log.Println(user)
+	return &user
+}
+
+func DeleteUser(user *UserBasic) {
+	common.DB.Delete(user)
 }

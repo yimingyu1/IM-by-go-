@@ -18,20 +18,16 @@ const docTemplate = `{
     "paths": {
         "/": {
             "get": {
-                "description": "do ping",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "首页"
+                    "用户模块"
                 ],
-                "summary": "ping example",
+                "summary": "创建用户",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "ok",
                         "schema": {
                             "type": "string"
                         }

@@ -1,25 +1,20 @@
 package service
 
 import (
+	"gin_chat/common"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 // GetIndex
-// @BasePath /api/v1
-// PingExample godoc
-// @Summary ping example
-// @Schemes
-// @Description do ping
+// @Summary gin_chat入口
+// @Description index
 // @Tags 首页
-// @Accept json
 // @Produce json
-// @Success 200 {string} Helloworld
+//
+//	@Success 200 {string} string "ok"
+//
 // @Router / [get]
 func GetIndex(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"code":    0,
-		"data":    nil,
-	})
+	c.JSON(http.StatusOK, common.BuildSuccessResponseNoData())
 }
