@@ -1,6 +1,7 @@
 package model
 
 import (
+	"gin_chat/common"
 	"gorm.io/gorm"
 	"time"
 )
@@ -16,7 +17,7 @@ type UserBasic struct {
 	ClientIp      string
 	LoginTime     time.Time
 	HeartBeatTime time.Time
-	LogOutTime    time.Time
+	LoginOutTime  time.Time
 	isLogout      bool
 	DeviceInfo    string
 }
@@ -24,4 +25,10 @@ type UserBasic struct {
 // TableName 自定义表名 user_basic
 func (user *UserBasic) TableName() string {
 	return "user_basic"
+}
+
+func GetUserList() []*UserBasic {
+	data := make([]*UserBasic, 10)
+	common.DB.Find(&data)
+	return data
 }
