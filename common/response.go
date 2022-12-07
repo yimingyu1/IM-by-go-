@@ -7,8 +7,8 @@ type Response struct {
 	Data    interface{} `json:"data"`
 }
 
-func BuildSuccessResponse(data interface{}) Response {
-	return Response{
+func BuildSuccessResponse(data interface{}) *Response {
+	return &Response{
 		Code:    0,
 		ErrMsg:  "",
 		Success: true,
@@ -16,8 +16,8 @@ func BuildSuccessResponse(data interface{}) Response {
 	}
 }
 
-func BuildSuccessResponseNoData() Response {
-	return Response{
+func BuildSuccessResponseNoData() *Response {
+	return &Response{
 		Code:    0,
 		ErrMsg:  "",
 		Success: true,
@@ -25,8 +25,8 @@ func BuildSuccessResponseNoData() Response {
 	}
 }
 
-func BuildFailResponse(errMsg string) Response {
-	return Response{
+func BuildFailResponse(errMsg string) *Response {
+	return &Response{
 		Code:    0,
 		ErrMsg:  errMsg,
 		Success: false,

@@ -45,6 +45,27 @@ func QueryUserById(id uint) *UserBasic {
 	return &user
 }
 
+func QueryUserByName(name string) *UserBasic {
+	var user UserBasic
+	common.DB.Debug().First(&user, "name = ?", name)
+	log.Println(user)
+	return &user
+}
+
+func QueryUserByPhone(phone string) *UserBasic {
+	var user UserBasic
+	common.DB.Debug().First(&user, "phone = ?", phone)
+	log.Println(user)
+	return &user
+}
+
+func QueryUserByEmail(email string) *UserBasic {
+	var user UserBasic
+	common.DB.Debug().First(&user, "email = ?", email)
+	log.Println(user)
+	return &user
+}
+
 func DeleteUser(user *UserBasic) {
 	common.DB.Debug().Delete(user)
 }

@@ -22,6 +22,11 @@ func CreateUser(c *gin.Context) {
 	var userParam model.UserParam
 	if c.ShouldBindJSON(&userParam) == nil {
 		log.Println("createUser param is ", userParam)
+		res := JudgeUserInfo(&userParam)
+		if res != nil {
+			c.JSON(http.StatusOK, res)
+			return
+		}
 		if userParam.Password != userParam.RePassword {
 			c.JSON(http.StatusOK, common.BuildFailResponse("两次密码不一致"))
 		} else if _, err := govalidator.ValidateStruct(&userParam); err != nil {
@@ -72,6 +77,11 @@ func UpdateUser(c *gin.Context) {
 	err := c.ShouldBindJSON(&userParam)
 	if err == nil {
 		user := model.QueryUserById(userParam.Id)
+		res := JudgeUserInfo(&userParam)
+		if res != nil {
+			c.JSON(http.StatusOK, res)
+			return
+		}
 		if user.ID == 0 {
 			c.JSON(http.StatusOK, common.BuildFailResponse("要更新的用户不存在"))
 			return
@@ -81,4 +91,21 @@ func UpdateUser(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, common.BuildFailResponse("请选择要修改的用户"))
 	}
+}
+
+func JudgeUserInfo(userParam *model.UserParam) *common.Response {
+	var user *model.UserBasic
+	user = model.QueryUserByName(userParam.Name)
+	if user.ID != 0 && user.ID != userParam.Id {
+		return common.BuildFailResponse("用户名已存在")
+	}
+	user = model.QueryUserByPhone(userParam.Phone)
+	if user.ID != 0 && user.ID != userParam.Id {
+		return common.BuildFailResponse("手机号已注册，请更换新手机号")
+	}
+	user = model.QueryUserByEmail(userParam.Email)
+	if user.ID != 0 && user.ID != userParam.Id {
+		return common.BuildFailResponse("邮箱已注册，请更换新邮箱")
+	}
+	return nil
 }
