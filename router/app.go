@@ -18,6 +18,8 @@ func Router() *gin.Engine {
 		userGroup.POST("/createUser", service.CreateUser)
 		userGroup.POST("/deleteUser", service.DeleteUser)
 		userGroup.POST("/updateUser", service.UpdateUser)
+		userGroup.POST("/updateUserPwd", service.UpdateUserPwd)
+		userGroup.POST("/login", service.Login)
 		userGroup.GET("/getUserList", service.GetUserList)
 	}
 	return engine

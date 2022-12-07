@@ -1,4 +1,4 @@
-package utils
+package init_boot
 
 import (
 	"gin_chat/common"

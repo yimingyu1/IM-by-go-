@@ -12,6 +12,7 @@ type UserBasic struct {
 	gorm.Model
 	Name          string
 	Password      string
+	Salt          string
 	Phone         string
 	Email         string
 	Identity      string
@@ -71,5 +72,9 @@ func DeleteUser(user *UserBasic) {
 }
 
 func UpdateUser(user *UserBasic) {
-	common.DB.Debug().Model(user).Updates(UserBasic{Name: user.Name, Password: user.Password})
+	common.DB.Debug().Model(user).Updates(UserBasic{Name: user.Name, Phone: user.Phone, Email: user.Email})
+}
+
+func UpdateUserPwd(user *UserBasic) {
+	common.DB.Model(user).Updates(UserBasic{Password: user.Password, Salt: user.Salt})
 }

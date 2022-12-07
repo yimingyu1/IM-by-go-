@@ -3,10 +3,12 @@ package service
 import (
 	"gin_chat/common"
 	"gin_chat/model"
+	"gin_chat/utils"
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func GetUserList(c *gin.Context) {
@@ -90,6 +92,48 @@ func UpdateUser(c *gin.Context) {
 		c.JSON(http.StatusOK, common.BuildSuccessResponse("更新成功"))
 	} else {
 		c.JSON(http.StatusOK, common.BuildFailResponse("请选择要修改的用户"))
+	}
+}
+
+func Login(c *gin.Context) {
+	var userParam model.LoginParam
+	err := c.ShouldBindJSON(&userParam)
+	if err == nil {
+		user := model.QueryUserByName(userParam.Name)
+		if user.ID == 0 {
+			c.JSON(http.StatusOK, common.BuildFailResponse("用户不存在"))
+			return
+		}
+		if utils.ValidPassword(userParam.Password, user.Salt, user.Password) {
+			c.JSON(http.StatusOK, common.BuildFailResponse("登录成功"))
+		} else {
+			c.JSON(http.StatusOK, common.BuildFailResponse("用户名或密码错误"))
+		}
+	} else {
+		c.JSON(http.StatusOK, common.BuildFailResponse("请输入用户名和密码"))
+	}
+}
+
+func UpdateUserPwd(c *gin.Context) {
+	var userParam model.UpdateUserPwdParam
+	err := c.ShouldBindJSON(&userParam)
+	if err == nil {
+		user := model.QueryUserById(userParam.Id)
+		if user.ID == 0 {
+			c.JSON(http.StatusOK, common.BuildFailResponse("用户不存在"))
+			return
+		}
+		if utils.ValidPassword(userParam.Password, user.Salt, user.Password) {
+			salt := strconv.Itoa(int(utils.GetRandWithIn1000()))
+			user.Password = utils.EncodePwd(userParam.NewPassword, salt)
+			user.Salt = salt
+			model.UpdateUserPwd(user)
+			c.JSON(http.StatusOK, common.BuildSuccessResponse("密码更新成功"))
+		} else {
+			c.JSON(http.StatusOK, common.BuildFailResponse("旧密码不正确，请重新输入"))
+		}
+	} else {
+		c.JSON(http.StatusOK, common.BuildFailResponse("请输入原密码和新密码"))
 	}
 }
 

@@ -1,19 +1,19 @@
 package main
 
 import (
+	"gin_chat/init_boot"
 	"gin_chat/router"
-	"gin_chat/utils"
 	"log"
 )
 
 // 入口文件
 func main() {
-	configErr := utils.InitConfig()
+	configErr := init_boot.InitConfig()
 	if configErr != nil {
 		log.Println("config err", configErr)
 		return
 	}
-	dbErr := utils.InitDB()
+	dbErr := init_boot.InitDB()
 	if dbErr != nil {
 		log.Println("db err", dbErr)
 		return
