@@ -47,3 +47,19 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusOK, common.BuildFailResponse("请选择要删除的用户"))
 	}
 }
+
+func UpdateUser(c *gin.Context) {
+	var userParam model.UserParam
+	err := c.ShouldBindJSON(&userParam)
+	if err == nil {
+		user := model.QueryUserById(userParam.Id)
+		if user.ID == 0 {
+			c.JSON(http.StatusOK, common.BuildFailResponse("要更新的用户不存在"))
+			return
+		}
+		model.UpdateUser(model.Param2Mode(userParam))
+		c.JSON(http.StatusOK, common.BuildSuccessResponse("更新成功"))
+	} else {
+		c.JSON(http.StatusOK, common.BuildFailResponse("请选择要修改的用户"))
+	}
+}

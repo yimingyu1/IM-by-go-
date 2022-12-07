@@ -38,7 +38,7 @@ func CreateUser(user *UserBasic) {
 	common.DB.Debug().Create(user)
 }
 
-func QueryUserById(id int) *UserBasic {
+func QueryUserById(id uint) *UserBasic {
 	var user UserBasic
 	common.DB.Debug().First(&user, "id = ?", id)
 	log.Println(user)
@@ -46,5 +46,9 @@ func QueryUserById(id int) *UserBasic {
 }
 
 func DeleteUser(user *UserBasic) {
-	common.DB.Delete(user)
+	common.DB.Debug().Delete(user)
+}
+
+func UpdateUser(user *UserBasic) {
+	common.DB.Debug().Model(user).Updates(UserBasic{Name: user.Name, Password: user.Password})
 }

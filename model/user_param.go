@@ -1,9 +1,12 @@
 package model
 
-import "time"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 type UserIdParam struct {
-	Id int `json:"id"`
+	Id uint `json:"id"`
 }
 
 type UserParam struct {
@@ -18,6 +21,7 @@ type UserParam struct {
 func Param2Mode(userParam UserParam) *UserBasic {
 	now := time.Now()
 	return &UserBasic{
+		Model:         gorm.Model{ID: userParam.Id},
 		Name:          userParam.Name,
 		Password:      userParam.Password,
 		Phone:         userParam.Phone,
