@@ -75,6 +75,10 @@ func UpdateUser(user *UserBasic) {
 	common.DB.Debug().Model(user).Updates(UserBasic{Name: user.Name, Phone: user.Phone, Email: user.Email})
 }
 
+func UpdateUserIdentity(id uint, identity string) {
+	common.DB.Debug().Model(&UserBasic{}).Where("id = ?", id).Update("identity", identity)
+}
+
 func UpdateUserPwd(user *UserBasic) {
 	common.DB.Model(user).Updates(UserBasic{Password: user.Password, Salt: user.Salt})
 }

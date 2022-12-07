@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"gin_chat/common"
 	"gin_chat/model"
 	"gin_chat/utils"
@@ -9,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 func GetUserList(c *gin.Context) {
@@ -105,6 +107,7 @@ func Login(c *gin.Context) {
 			return
 		}
 		if utils.ValidPassword(userParam.Password, user.Salt, user.Password) {
+			UpdateUserIdentity(user.ID)
 			c.JSON(http.StatusOK, common.BuildFailResponse("登录成功"))
 		} else {
 			c.JSON(http.StatusOK, common.BuildFailResponse("用户名或密码错误"))
@@ -152,4 +155,8 @@ func JudgeUserInfo(userParam *model.UserParam) *common.Response {
 		return common.BuildFailResponse("邮箱已注册，请更换新邮箱")
 	}
 	return nil
+}
+
+func UpdateUserIdentity(id uint) {
+	model.UpdateUserIdentity(id, utils.Md5Encode(fmt.Sprintf("%d", time.Now().UnixMilli())))
 }
