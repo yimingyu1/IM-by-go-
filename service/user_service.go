@@ -3,6 +3,7 @@ package service
 import (
 	"gin_chat/common"
 	"gin_chat/model"
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
@@ -23,6 +24,24 @@ func CreateUser(c *gin.Context) {
 		log.Println("createUser param is ", userParam)
 		if userParam.Password != userParam.RePassword {
 			c.JSON(http.StatusOK, common.BuildFailResponse("两次密码不一致"))
+		} else if _, err := govalidator.ValidateStruct(&userParam); err != nil {
+			log.Println(err)
+			Errors, ok := err.(govalidator.Errors)
+			if ok {
+				for _, errorItem := range Errors {
+					goValidatorErr := errorItem.(govalidator.Error)
+					if goValidatorErr.Name == "phone" {
+						c.JSON(http.StatusOK, common.BuildFailResponse("手机号格式不正确"))
+						return
+					}
+					if goValidatorErr.Name == "email" {
+						c.JSON(http.StatusOK, common.BuildFailResponse("邮箱格式不正确"))
+						return
+					}
+				}
+			} else {
+				c.JSON(http.StatusOK, common.BuildFailResponse("系统异常"))
+			}
 		} else {
 			model.CreateUser(model.Param2Mode(userParam))
 			c.JSON(http.StatusOK, common.BuildSuccessResponse("创建用户成功"))
